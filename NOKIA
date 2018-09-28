@@ -1,0 +1,130 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  DivisorInc{
+    static class Reader
+    {
+        final private int BUFFER_SIZE = 1 << 25;
+        private DataInputStream din;
+        private byte[] buffer;
+        private int bufferPointer, bytesRead;
+ 
+        public Reader()
+        {
+            din = new DataInputStream(System.in);
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+        private void fillBuffer() throws IOException
+        {
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+            if (bytesRead == -1)
+                buffer[0] = -1;
+        }
+        public String readLine() throws IOException 
+        { 
+            byte[] buf = new byte[1280000]; // line length 
+            int cnt = 0, c; 
+            while ((c = read()) != -1) 
+            { 
+                if (c == '\n') 
+                    break; 
+                buf[cnt++] = (byte) c; 
+            } 
+            return new String(buf, 0, cnt); 
+        } 
+        private byte read() throws IOException
+        {
+            if (bufferPointer == bytesRead)
+                fillBuffer();
+            return buffer[bufferPointer++];
+        }
+        public int nextInt() throws IOException
+        {
+            int ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do
+            {
+                ret = ret * 10 + c - '0';
+            }  while ((c = read()) >= '0' && c <= '9');
+ 
+            if (neg)
+                return -ret;
+            return ret;
+        }
+    }
+   	static int min;
+   	static int N;
+   	static ArrayList<ArrayList<Integer>> list;
+    public static void main(String[] argh) throws Exception{
+        // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Reader br= new Reader();
+        int t= br.nextInt();
+        list= new ArrayList<>();
+        for(int i=0; i<=30; i++){
+            list.add(new ArrayList<>());
+        }
+        list.get(1).add(2);
+        list.get(0).add(0);
+        for(int tt=0; tt<t; tt++){
+            N= br.nextInt();
+            int M= br.nextInt();
+            min= Integer.MAX_VALUE;
+            if(list.get(N).size() == 0){
+                doRec(0, N);    
+            }
+            
+            ArrayList<Integer> al= list.get(N);
+            for(int i=0; i<al.size(); i++){
+                if(al.get(i) <= M){
+                    if(M-(al.get(i)) < min) min= M-al.get(i);
+                }
+            }
+            if(min == Integer.MAX_VALUE){
+                System.out.println(-1);
+            }
+            else{
+                System.out.println(min);
+            }
+        }
+    }
+    
+    private static void doRec(int l, int h){
+        if(h-l == 0 || h-l == 1) return;
+        for(int p=l+1; p<=h; p++){
+            int left= p-1-l;
+            int right= h-p;
+            if(list.get(left).size() == 0 && list.get(right).size() == 0){
+                doRec(l, p-1);
+                doRec(p, h);
+            }
+            else if(list.get(left).size() != 0 && list.get(right).size() == 0){
+                doRec(p, h);
+            }
+            else if(list.get(left).size() == 0 && list.get(right).size() != 0){
+                doRec(l, p-1);
+            }
+            HashMap<Integer, Integer> map= new HashMap<>();
+            for(int i=0; i<list.get(left).size(); i++){
+                for(int j=0; j<list.get(right).size(); j++){
+                    int lSum= list.get(left).get(i);
+                    int rSum= list.get(right).get(j);
+                    int sum= h - l + 1 + lSum + rSum;
+                    if(!map.containsKey(sum)){
+                        list.get(h-l).add(sum);
+                        map.put(sum, 1);
+                    }
+                }
+            }
+
+        }
+    }
+
+}
