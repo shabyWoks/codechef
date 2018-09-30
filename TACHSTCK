@@ -1,0 +1,32 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  Solution{
+
+    public static void main(String[] argh) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] in= br.readLine().trim().split(" ");
+        int N= Integer.parseInt(in[0]);
+        int D= Integer.parseInt(in[1]);
+        int[] ar= new int[N];
+        for(int i=0; i<N; i++){
+            ar[i]= Integer.parseInt(br.readLine().trim());
+        }
+        Arrays.sort(ar);
+        int pos= 1;
+        int count= 0;
+        while(pos<N){
+            if(ar[pos] - ar[pos-1] <= D){
+                count++;
+                pos= pos+2;
+            }
+            else{
+                pos++;
+            }
+        }
+        System.out.println(count);
+    }
+
+}
