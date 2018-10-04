@@ -1,0 +1,80 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  Solution{
+    public static void main(String[] argh) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] inp1= br.readLine().trim().split(" ");
+        int N= Integer.parseInt(inp1[0]);
+        int X= Integer.parseInt(inp1[1]);
+        int Y= Integer.parseInt(inp1[2]);
+        int[] arr1= new int[N];
+        int[] arr2= new int[N];
+        String[] in1= br.readLine().trim().split(" ");
+        String[] in2= br.readLine().trim().split(" ");
+        ArrayList<TADELIVE> list= new ArrayList<>();
+        for(int i=0; i<N; i++){
+            arr1[i]= Integer.parseInt(in1[i]);
+            arr2[i]= Integer.parseInt(in2[i]);
+            list.add(new TADELIVE(arr1[i], arr2[i]));
+        }
+        
+        Collections.sort(list);
+        long[] sum1= new long[N];
+        long[] sum2= new long[N];
+        sum1[0]= (long)list.get(0).da1;
+        for(int i=1; i<N; i++){
+            sum1[i] = sum1[i-1] + (long)list.get(i).da1;
+        }
+        sum2[N-1]= (long)list.get(N-1).da2;
+        for(int i=N-2; i>=0; i--){
+            sum2[i]= sum2[i+1] + (long)list.get(i).da2;
+        }
+        long max= Integer.MIN_VALUE;
+        for(int i=-1; i<X; i++){
+            long val=0;
+            if(i >= 0){
+                val += sum1[i];    
+            }
+            if(i+1<N){
+                val += sum2[i+1];
+            }
+            if(N-1-i <= Y && N-1-i >= 1){
+                if(val > max) max= val;    
+            }
+        }
+
+        for(int i= -1; i<Y; i++){
+            long val= 0;
+            if(i >= 0){
+                val += sum2[N-1-i];
+            }
+            
+            if(N-1-i-1 >= 0){
+                val += sum1[N-1-i-1];
+            }
+            if(N-1-i <= X && N-1-i >= 1){
+                if(val > max) max= val;    
+            }
+        }
+        
+        System.out.println(max);
+    }
+    private static class TADELIVE implements Comparable<TADELIVE>{
+        private int da1;
+        private int da2;
+        private float frac;
+        public TADELIVE(int da1, int da2){
+            this.da1= da1;
+            this.da2= da2;
+            this.frac= (da1 - da2);
+        }
+        public int compareTo(TADELIVE t){
+            if(t.frac > this.frac) return 1;
+            else if(t.frac < this.frac) return -1;
+            else return 0;
+        }
+    }
+}
