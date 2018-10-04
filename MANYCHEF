@@ -1,0 +1,57 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  Solution{
+    static char chr[]= {'F', 'E', 'H', 'C'}; 
+    public static void main(String[] argh) throws Exception{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int t= Integer.parseInt(br.readLine().trim());
+        for(int ii=0; ii<t; ii++){
+            String ss= br.readLine().trim();
+            StringBuilder s= new StringBuilder(ss);
+            int l= s.length();
+            for(int i=l-1; i>=0; i--){
+                if(s.charAt(i) == '?'){
+                    boolean gotIt= true;
+                    for(int j=0; j<4; j++){
+                        if(i-j < 0){
+                            gotIt= false;
+                            break;
+                        }
+                        if(chr[j] != s.charAt(i-j) && s.charAt(i-j) != '?'){
+                            gotIt= false;
+                            break;
+                        }
+                    }
+                    if(gotIt == false){
+                        s.replace(i, i+1, "A");
+                    }
+                    else{
+                        s.replace(i-3, i+1, "CHEF");
+                        i= i - 3;
+                    }
+                }
+                else{
+                    boolean gotIt= true;
+                    for(int j=0; j<4; j++){
+                        if(i-j < 0){
+                            gotIt= false;
+                            break;
+                        }
+                        if(chr[j] != s.charAt(i-j) && s.charAt(i-j) != '?'){
+                            gotIt= false;
+                            break;
+                        }
+                    }
+                    if(gotIt == true){
+                        s.replace(i-3, i+1, "CHEF");
+                        i= i - 3;
+                    }
+                }
+            }
+            System.out.println(s);
+        }
+    }
+}
