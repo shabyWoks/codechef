@@ -63,7 +63,7 @@ class  Solution{
 
     public static void main(String[] argh) throws Exception{
         Reader br= new Reader();
-        int t= Integer.parseInt(br.readLine().trim());
+        int t= br.nextInt();
         for(int i=0; i<t; i++){
             int n= br.nextInt();
             int k= br.nextInt();
@@ -76,43 +76,27 @@ class  Solution{
                 diff[j]= diff[j] - br.nextInt();
             }
             Arrays.sort(diff);
-            PriorityQueue<CHEFTMA> pq= new PriorityQueue<>();
-            for(int j=0; j<k; j++){
-                CHEFTMA c= new CHEFTMA(br.nextInt());
-                pq.add(c);
+            int[] but= new int[k+m];
+            for(int j=0; j<k+m; j++){
+                but[j]= br.nextInt();
             }
-            for(int j=0; j<m; j++){
-                CHEFTMA c= new CHEFTMA(br.nextInt());
-                pq.add(c);
-            }
+            Arrays.sort(but);
             long sum= 0;
-            
+            int ind= k+m-1;
             for(int j=n-1; j>=0; j--){
-                // System.out.println(diff[j]);
                 int aq= diff[j];
-                while(pq.size()!= 0 && pq.peek().num > aq){
-                    pq.poll();
+                while(ind >= 0 && but[ind] >aq){
+                    ind--;
                 }
-                if(pq.size() == 0){
-                    sum += aq;
+                if(ind >= 0){
+                    diff[j] -= but[ind];
+                    ind--;
                 }
-                else{
-                    int kk= pq.poll().num;
-                    sum += (long)(aq - kk);
-                }
+                sum += diff[j];
+                
             }
             System.out.println(sum);
         }
         
-    }
-    
-    private static class CHEFTMA implements Comparable<CHEFTMA>{
-        int num;
-        public CHEFTMA(int num) {this.num= num;}
-        public int compareTo(CHEFTMA c){
-            if(c.num > this.num) return 1;
-            else if(c.num < this.num) return -1;
-            else return 0;
-        }
     }
 }
