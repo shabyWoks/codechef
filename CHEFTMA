@@ -4,32 +4,85 @@ import java.math.*;
 import java.io.InputStream;
 
 class  Solution{
+    static class Reader
+    {
+        final private int BUFFER_SIZE = 1 << 25;
+        private DataInputStream din;
+        private byte[] buffer;
+        private int bufferPointer, bytesRead;
+ 
+        public Reader()
+        {
+            din = new DataInputStream(System.in);
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+        private void fillBuffer() throws IOException
+        {
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+            if (bytesRead == -1)
+                buffer[0] = -1;
+        }
+        public String readLine() throws IOException 
+        { 
+            byte[] buf = new byte[1280000]; // line length 
+            int cnt = 0, c; 
+            while ((c = read()) != -1) 
+            { 
+                if (c == '\n') 
+                    break; 
+                buf[cnt++] = (byte) c; 
+            } 
+            return new String(buf, 0, cnt); 
+        } 
+        private byte read() throws IOException
+        {
+            if (bufferPointer == bytesRead)
+                fillBuffer();
+            return buffer[bufferPointer++];
+        }
+        public int nextInt() throws IOException
+        {
+            int ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do
+            {
+                ret = ret * 10 + c - '0';
+            }  while ((c = read()) >= '0' && c <= '9');
+ 
+            if (neg)
+                return -ret;
+            return ret;
+        }
+    }
+
     public static void main(String[] argh) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Reader br= new Reader();
         int t= Integer.parseInt(br.readLine().trim());
         for(int i=0; i<t; i++){
-            String[] inp= br.readLine().trim().split(" ");
-            int n= Integer.parseInt(inp[0]);
-            int k= Integer.parseInt(inp[1]);
-            int m= Integer.parseInt(inp[2]);
-            String[] inp1= br.readLine().trim().split(" ");
-            String[] inp2= br.readLine().trim().split(" ");
+            int n= br.nextInt();
+            int k= br.nextInt();
+            int m= br.nextInt();
             int[] diff= new int[n];
             for(int j=0; j<n; j++){
-                diff[j]= (int)(Integer.parseInt(inp1[j]) - Integer.parseInt(inp2[j]));
+                diff[j]= br.nextInt();
+            }
+            for(int j=0; j<n; j++){
+                diff[j]= diff[j] - br.nextInt();
             }
             Arrays.sort(diff);
-            String[] inp3= br.readLine().trim().split(" ");
-            String[] inp4= br.readLine().trim().split(" ");
             PriorityQueue<CHEFTMA> pq= new PriorityQueue<>();
             for(int j=0; j<k; j++){
-                int aa= Integer.parseInt(inp3[j]);
-                CHEFTMA c= new CHEFTMA(aa);
+                CHEFTMA c= new CHEFTMA(br.nextInt());
                 pq.add(c);
             }
             for(int j=0; j<m; j++){
-                int aa= Integer.parseInt(inp4[j]);
-                CHEFTMA c= new CHEFTMA(aa);
+                CHEFTMA c= new CHEFTMA(br.nextInt());
                 pq.add(c);
             }
             long sum= 0;
@@ -47,10 +100,10 @@ class  Solution{
                     int kk= pq.poll().num;
                     sum += (long)(aq - kk);
                 }
-                
             }
             System.out.println(sum);
         }
+        
     }
     
     private static class CHEFTMA implements Comparable<CHEFTMA>{
