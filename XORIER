@@ -1,0 +1,67 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  Solution{
+    public static void main(String[] argh) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t= Integer.parseInt(br.readLine().trim());
+        for(int tt=0; tt<t; tt++){
+            String[] inp= br.readLine().trim().split(" ");
+            int n= Integer.parseInt(inp[0]);
+            String[] inpH= br.readLine().trim().split(" ");
+            int[] H= new int[n];
+            for(int i=0; i<n; i++){
+                H[i]= Integer.parseInt(inpH[i]);
+            }
+            int[] count= new int[1000001];
+            int eCount= 0;
+            int oCount= 0;
+            for(int i=0; i<n; i++){
+                count[H[i]]= count[H[i]] + 1;
+                if((H[i]&1) == 0){
+                    eCount++;
+                }
+                else{
+                    oCount++;
+                }
+            }
+            long eXCount= 0;
+            long oXCount= 0;
+            for(int i=1; i<=1000000; i++){
+                if(i%2 == 0){
+                    eXCount += sum((long)count[i]);
+                }
+                else{
+                    oXCount += sum((long)count[i]);
+                }
+            }
+            
+            long eVal= sum((long)eCount);
+            eVal= eVal - eXCount;
+            
+            long oVal= sum((long)oCount);
+            oVal= oVal - oXCount;
+            
+            for(int i=1; i<=999998; i++){
+                if(i%2 == 0){
+                    if((i^(i+2)) <= 3)
+                        eVal= eVal - (count[i]*count[i+2]);
+                }
+                else{
+                    if((i^(i+2)) <= 3)
+                        oVal= oVal - (count[i]*count[i+2]);
+                }
+            }
+            
+            System.out.println(eVal + oVal);
+        }
+        
+    }
+    
+    private static long sum(long n){
+        return ((n*(n-1)) >> 1);
+    }
+    
+}
