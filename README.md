@@ -1,1 +1,1 @@
-# CODECHEF -- Solutions in Java
+# CODECHEF-- Solutions in JAVA
