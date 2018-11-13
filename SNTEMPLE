@@ -1,0 +1,62 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+import java.io.InputStream;
+
+class  GMEDIAN{
+    public static void main(String[] argh) throws Exception{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int T= Integer.parseInt(br.readLine().trim());
+        StringBuilder sb= new StringBuilder();
+        for(int i=0; i<T; i++){
+            String[] inp= br.readLine().trim().split(" ");
+            int N= Integer.parseInt(inp[0]);
+            int[] A= new int[N];
+            long total= 0;
+            String[] inpA= br.readLine().trim().split(" ");
+            for(int j=0; j<N; j++){
+                A[j]= Integer.parseInt(inpA[j]);
+                total += (long)A[j];
+            }
+            
+            int[] left= new int[N];
+            left[0]= 1;
+            for(int j=1; j<N; j++){
+                if(left[j-1] + 1 <= A[j]){
+                    left[j]= left[j-1] + 1;
+                }
+                else{
+                    left[j]= A[j];
+                }
+            }
+            
+            int[] right= new int[N];
+            right[N-1]= 1;
+            for(int j=N-2; j>=0; j--){
+                if(right[j+1] + 1 <= A[j]){
+                    right[j]= right[j+1] + 1;
+                }
+                else{
+                    right[j]= A[j];
+                }
+            }
+            int[] min= new int[N];
+            for(int j=0; j<N; j++){
+                min[j]= Math.min(left[j], right[j]);
+            }
+            
+            long minV= Long.MAX_VALUE;
+            for(int j=0; j<N; j++){
+                long sumT= getSum(min[j]) + getSum(min[j] - 1);
+                if(minV > (total - sumT)) minV= total - sumT;
+            }
+            sb.append(minV);
+            if(i != T-1) sb.append("\n");
+        }
+        System.out.print(sb);
+    }
+    
+    private static long getSum(long n){
+        return (n*(n+1)) >> 1;
+    }
+}
