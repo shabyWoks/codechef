@@ -1,0 +1,157 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Main
+{
+	static int MOD = 1000000007;
+  static Reader br;
+  static BufferedWriter bw;
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		br = new Reader();
+		bw = new BufferedWriter(new PrintWriter(System.out));
+		
+		int T = br.nextInt();
+		
+		for(int t=0; t<T; t++) {
+		    int N       = br.nextInt();
+		    int[] arr   = new int[N];
+		    HashMap<String, Integer> map = new HashMap<>();
+		    
+		    PriorityQueue<Pair> pq1 = new PriorityQueue<>();
+		    PriorityQueue<Pair> pq2 = new PriorityQueue<>();
+		    
+		    for(int i=0; i<N; i++) {
+		        arr[i] = br.nextInt();
+		        pq1.add(new Pair(i, arr[i]));
+		    }
+		    
+		    for(int i=0; i<N-1; i++) {
+		        int x = br.nextInt() - 1;
+		        int y = br.nextInt() - 1;
+		      
+		        map.put(x + " " + y , 1);
+		        map.put(y + " " + x , 1);
+		    }
+		    
+		    for(int i=0; i<N; i++) {
+		        boolean found = false;
+		        while(pq1.size() > 0) {
+		            Pair p = pq1.peek();
+		            if (map.containsKey(i + " " + p.pos) || i == p.pos) {
+		                pq2.add(pq1.remove());
+		                continue;
+		            } else {
+		                bw.write((p.pos + 1) + " ");
+		                found = true;
+		                break;
+		            }
+		        }
+		        if(found == false) {
+		            bw.write(0 + " ");
+		        }
+		        while(pq2.size() > 0) {
+		            pq1.add(pq2.remove());
+		        }
+		    }
+		    bw.write("\n");
+		    
+		}
+		
+		bw.flush();
+		bw.close();
+		
+	}
+	
+	static class Pair implements Comparable<Pair> {
+	    int pos;
+	    int val;
+	    
+	    public Pair(int p, int v) {
+	        this.pos= p;
+	        this.val= v;
+	    }
+	    
+	    public int compareTo(Pair p) {
+	        if(this.val > p.val) return -1;
+	        else if(this.val < p.val) return 1;
+	        return 0;
+	    }
+	}
+	
+	static class Reader 
+    { 
+        final private int BUFFER_SIZE = 1 << 16; 
+        private DataInputStream din; 
+        private byte[] buffer; 
+        private int bufferPointer, bytesRead; 
+  
+        public Reader() 
+        { 
+            din = new DataInputStream(System.in); 
+            buffer = new byte[BUFFER_SIZE]; 
+            bufferPointer = bytesRead = 0; 
+        } 
+  
+        public Reader(String file_name) throws IOException 
+        { 
+            din = new DataInputStream(new FileInputStream(file_name)); 
+            buffer = new byte[BUFFER_SIZE]; 
+            bufferPointer = bytesRead = 0; 
+        } 
+  
+        public String readLine() throws IOException 
+        { 
+            byte[] buf = new byte[64]; // line length 
+            int cnt = 0, c; 
+            while ((c = read()) != -1) 
+            { 
+                if (c == '\n') 
+                    break; 
+                buf[cnt++] = (byte) c; 
+            } 
+            return new String(buf, 0, cnt); 
+        } 
+  
+        public int nextInt() throws IOException 
+        { 
+            int ret = 0; 
+            byte c = read(); 
+            while (c <= ' ') 
+                c = read(); 
+            boolean neg = (c == '-'); 
+            if (neg) 
+                c = read(); 
+            do
+            { 
+                ret = ret * 10 + c - '0'; 
+            }  while ((c = read()) >= '0' && c <= '9'); 
+  
+            if (neg) 
+                return -ret; 
+            return ret; 
+        }
+        
+        private void fillBuffer() throws IOException 
+        { 
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE); 
+            if (bytesRead == -1) 
+                buffer[0] = -1; 
+        } 
+  
+        private byte read() throws IOException 
+        { 
+            if (bufferPointer == bytesRead) 
+                fillBuffer(); 
+            return buffer[bufferPointer++]; 
+        } 
+  
+        public void close() throws IOException 
+        { 
+            if (din == null) 
+                return; 
+            din.close(); 
+        } 
+    }
+}
